@@ -52,8 +52,9 @@ export class ValidarSolicitudComponent implements OnInit {
 
   ngOnInit() {
     this.spinnerService.show(); 
-    let usuarioActual = sessionStorage.getItem("usuario");    
-    this.usuarioActual = JSON.parse(usuarioActual);
+    this.ObtenerUsuarioActual();
+    // let usuarioActual = sessionStorage.getItem("usuario");    
+    // this.usuarioActual = JSON.parse(usuarioActual);
 
     this.SolicitudPermisoForm = this.formBuilder.group({
       Apellidos: [''],
@@ -72,7 +73,18 @@ export class ValidarSolicitudComponent implements OnInit {
       ObservacionGH: [""]
     });    
     
-    this.consultarSolicitudPermiso();      
+    // this.consultarSolicitudPermiso();      
+  }
+
+  ObtenerUsuarioActual() {
+    this.servicio.ObtenerUsuarioActual().subscribe(
+      (respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Id);        
+        this.consultarSolicitudPermiso();
+      }, err => {
+        console.log('Error obteniendo usuario: ' + err);
+      }
+    )
   }
 
   getParams(url){
