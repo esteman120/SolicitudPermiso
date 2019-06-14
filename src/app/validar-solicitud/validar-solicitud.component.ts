@@ -51,11 +51,8 @@ export class ValidarSolicitudComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.spinnerService.show(); 
-    this.ObtenerUsuarioActual();
-    // let usuarioActual = sessionStorage.getItem("usuario");    
-    // this.usuarioActual = JSON.parse(usuarioActual);
-
+    this.spinnerService.show();     
+    
     this.SolicitudPermisoForm = this.formBuilder.group({
       Apellidos: [''],
       Nombres: [''],
@@ -71,9 +68,9 @@ export class ValidarSolicitudComponent implements OnInit {
       HoraFin: ["", Validators.required],
       FechaFin: ["", Validators.required],
       ObservacionGH: [""]
-    });    
+    });      
     
-    // this.consultarSolicitudPermiso();      
+    this.ObtenerUsuarioActual();
   }
 
   ObtenerUsuarioActual() {
