@@ -68,59 +68,59 @@ export class SPServicio {
     }
 
     GuardarSolicitud(ObjSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.add(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.add(ObjSolicitud);
         return respuesta;
     }
 
     GuardarServicio(ObjServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
         return respuesta;
     }
 
     consultarSolicitudPermiso(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Id eq "+idSolicitud).select("*","Solicitante/Title","Solicitante/EMail").expand("Solicitante").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Id eq "+idSolicitud).select("*","Solicitante/Title","Solicitante/EMail").expand("Solicitante").getAll();
         return respuesta;
     }
 
     GuardarRespuestaJefe(ObjSolicitud, IdSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
         return respuesta;
     }
 
     ObtenerServicio(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud).getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud).getAll();
         return respuesta;
     }
 
     ModificarServicio(ObjServicio, idServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
         return respuesta; 
     }
 
     GuardarRecepcionGH(ObjSolicitud, IdSolicitud) {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
         return respuesta;
     }
 
     ValidarUsuarioGH(idUsuarioGH){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("GestionHumanaId eq '"+idUsuarioGH+"'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("GestionHumanaId eq '"+idUsuarioGH+"'").getAll();
         return respuesta;
     } 
     
     obtenerSolicitudesGH(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Estado eq 'En revision GH'").select("*","Solicitante/Title").expand("Solicitante").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Estado eq 'En revision GH'").select("*","Solicitante/Title").expand("Solicitante").getAll();
         return respuesta;
     }
 
     EnviarNotificacion(objNotificacion){
-        let respuesta = this.ObtenerConfiguracionConPost().utility.sendEmail(objNotificacion);
+        let respuesta = this.ObtenerConfiguracion().utility.sendEmail(objNotificacion);
         return respuesta;
     }
 
     // async AgregarHojaDeVida(nombre, archivo: File, objItems): Promise<any>{
     //     let mensaje = ""
         
-    //     let respuesta = await this.ObtenerConfiguracionConPost().web.getFolderByServerRelativeUrl("Prueba/Esteban").files.add(nombre, archivo).then(
+    //     let respuesta = await this.ObtenerConfiguracion().web.getFolderByServerRelativeUrl("Prueba/Esteban").files.add(nombre, archivo).then(
     //         f=>{
                 
     //             f.file.getItem().then(item => {
