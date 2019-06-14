@@ -11,7 +11,8 @@ export class Solicitud{
         public fechaFinPermiso?: string,
         public estado?: string,
         public responsableActual?: number,
-        public EmailSolicitante?: string)
+        public EmailSolicitante?: string,
+        public ObservacionGH?: string)
         {
                    
         }
@@ -29,7 +30,8 @@ export class Solicitud{
             element.FechaFinPermiso,
             element.Estado,
             element.ResponsableActualId,
-            element.Solicitante.EMail);
+            element.Solicitante.EMail,
+            element.ObservacionGH);
     }
 
     public static fromJsonList(elements: any) {
