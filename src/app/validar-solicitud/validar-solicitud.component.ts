@@ -36,6 +36,8 @@ export class ValidarSolicitudComponent implements OnInit {
   IdServicio: any;
   RecepcionGH: boolean;
   EmailSolicitante: string;
+  UsuarioHG: boolean;
+  ComentarioGH: boolean;
 
   constructor( 
     private formBuilder: FormBuilder, 
@@ -48,6 +50,7 @@ export class ValidarSolicitudComponent implements OnInit {
     this.minDateFechaInicio = new Date();
     this.AprobarJefe = false;
     this.RecepcionGH = false;
+    this.ComentarioGH = false;
   }
 
   ngOnInit() {
@@ -77,11 +80,31 @@ export class ValidarSolicitudComponent implements OnInit {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (respuesta) => {
         this.usuarioActual = new Usuario(respuesta.Id);        
-        this.consultarSolicitudPermiso();
+        this.ValidarUsuarioGH()
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
       }
     )
+  }
+
+  ValidarUsuarioGH(){
+    this.servicio.ValidarUsuarioGH(this.usuarioActual.idUsuario).then(
+      (res)=>{
+        if (res.length > 0) {
+            this.UsuarioHG = true;
+        }
+        else{
+          this.UsuarioHG = false;
+        }
+        this.consultarSolicitudPermiso();
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+        this.mostrarError("Error al cargar las solicitudes");
+        this.spinnerService.hide();
+      }
+    ) 
   }
 
   getParams(url){
@@ -99,8 +122,6 @@ export class ValidarSolicitudComponent implements OnInit {
 
   consultarSolicitudPermiso(): any {    
 
-//"U2FsdGVkX182".substring(12, "U2FsdGVkX182".length-1);
-
     let Parametro = this.getParams(window.location.href);    
     this.idSolicitud = Parametro["id"].substring(12, Parametro["id"].length);
 
@@ -108,7 +129,6 @@ export class ValidarSolicitudComponent implements OnInit {
       this.mostrarError("Error al cargar la solicitud");
       setTimeout(
         ()=>{
-          // window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
           this.spinnerService.hide();
         },2000);
     }
@@ -122,6 +142,7 @@ export class ValidarSolicitudComponent implements OnInit {
         this.SolicitudPermisoForm.controls["FechaInicio"].setValue(this.ObjSolicitud[0].fechaInicioPermiso);
         this.SolicitudPermisoForm.controls["HoraFin"].setValue(this.ObjSolicitud[0].horaFinPermiso);
         this.SolicitudPermisoForm.controls["FechaFin"].setValue(this.ObjSolicitud[0].fechaFinPermiso);
+        this.SolicitudPermisoForm.controls["ObservacionGH"].setValue(this.ObjSolicitud[0].ObservacionGH);
         this.EmailSolicitante = this.ObjSolicitud[0].EmailSolicitante;
         if (this.ObjSolicitud[0].tipoPermiso === "Otro") {
           this.otroTipoPermiso = true;
@@ -129,9 +150,16 @@ export class ValidarSolicitudComponent implements OnInit {
         if(this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === this.ObjSolicitud[0].responsableActual)){
           this.AprobarJefe = true;
         }
-        if (this.ObjSolicitud[0].estado === "En revision GH" ) {
+        if (this.ObjSolicitud[0].estado === "En revision GH" && this.UsuarioHG === true) {
           this.RecepcionGH = true;
+          this.ComentarioGH = true;                      
         }
+
+        if (this.ObjSolicitud[0].estado === "Recibido por GH") {          
+            this.ComentarioGH = true;
+            this.SolicitudPermisoForm.controls["ObservacionGH"].disable();
+        }
+        
         this.ObtenerSolicitante(this.ObjSolicitud[0].idUsuario);
       }
     ).catch(

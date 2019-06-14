@@ -33,9 +33,24 @@ export class SolicitudesPendientesComponent implements OnInit {
 
   ngOnInit() {
     this.spinnerService.show();
-    let usuarioActual = sessionStorage.getItem("usuario");    
-    this.usuarioActual = JSON.parse(usuarioActual);
+    // let usuarioActual = sessionStorage.getItem("usuario");    
+    // this.usuarioActual = JSON.parse(usuarioActual);
 
+    this.ObtenerUsuarioActual();    
+  }
+
+  ObtenerUsuarioActual() {
+    this.servicio.ObtenerUsuarioActual().subscribe(
+      (respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Id);        
+        this.ValidarUsuarioGH();
+      }, err => {
+        console.log('Error obteniendo usuario: ' + err);
+      }
+    )
+  }
+
+  ValidarUsuarioGH(){
     this.servicio.ValidarUsuarioGH(this.usuarioActual.idUsuario).then(
       (res)=>{
         if (res.length > 0) {
