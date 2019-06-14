@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Compiler } from '@angular/core';
+import { Usuario } from './Entidades/usuario';
+import { SPServicio } from './Servicios/sp-servicio';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,27 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'SolicitudPermisos';
+  usuario: Usuario;
+  nombreUsuario: string;
+
+
+  constructor(private servicio: SPServicio, private compilador: Compiler) {
+    this.compilador.clearCache(); 
+  }
+
+  public ngOnInit() {
+    this.ObtenerUsuarioActual();
+  }
+
+  ObtenerUsuarioActual() {
+    this.servicio.ObtenerUsuarioActual().subscribe(
+      (respuesta) => {
+        this.usuario = new Usuario(respuesta.Id);        
+        this.nombreUsuario = this.usuario.nombre;
+        sessionStorage.setItem('usuario', JSON.stringify(this.usuario));  
+      }, err => {
+        console.log('Error obteniendo usuario: ' + err);
+      }
+    )
+  }
 }
