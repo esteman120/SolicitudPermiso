@@ -38,6 +38,7 @@ export class ValidarSolicitudComponent implements OnInit {
   EmailSolicitante: string;
   UsuarioHG: boolean;
   ComentarioGH: boolean;
+  MensajeAccion: string;
 
   constructor( 
     private formBuilder: FormBuilder, 
@@ -241,6 +242,8 @@ export class ValidarSolicitudComponent implements OnInit {
       Estado: "En revision GH",
       ResponsableActualId: -1
     }
+
+    this.MensajeAccion = "La solicitud se ha aprobado con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
@@ -269,6 +272,8 @@ export class ValidarSolicitudComponent implements OnInit {
       Estado: "Rechazado",
       ResponsableActualId: -1
     }
+
+    this.MensajeAccion = "La solicitud ha sido rechazada con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
@@ -297,6 +302,7 @@ export class ValidarSolicitudComponent implements OnInit {
       ResponsableActualId: -1,
       ObservacionGH: observacionGH
     }
+    this.MensajeAccion = "La solicitud ha sido recibida con éxito";
     this.servicio.GuardarRecepcionGH(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
@@ -345,7 +351,7 @@ export class ValidarSolicitudComponent implements OnInit {
   guardarServicio(objServicio) {
     this.servicio.ModificarServicio(objServicio, this.IdServicio).then(
         (resultado)=>{
-          this.MostrarExitoso("La solicitud se aprobo con éxito");
+          this.MostrarExitoso(this.MensajeAccion);
           sessionStorage.removeItem("TipoConsulta");
           setTimeout(
             ()=>{

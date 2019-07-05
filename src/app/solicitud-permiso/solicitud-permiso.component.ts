@@ -153,6 +153,18 @@ export class SolicitudPermisoComponent implements OnInit {
     this.minDateFechaFin = event.value;
   }
 
+  private AsignarFormatoFecha(FechaActividad: Date) {
+    let diaActividadExtraordinaria = FechaActividad.getDate();
+    let mesActividadExtraordinaria = FechaActividad.getMonth();
+    let anoActividadExtraordinaria = FechaActividad.getFullYear();
+    let hoy = new Date();
+    let horas = FechaActividad.getHours() === 0 ? hoy.getHours() : FechaActividad.getHours();
+    let minutos = FechaActividad.getMinutes() === 0 ? 1 : FechaActividad.getMinutes();
+    let segundos = FechaActividad.getSeconds() === 0 ? 1 : FechaActividad.getSeconds();
+    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, horas, minutos, segundos).toISOString();
+    return fechaRetornar;
+  }
+
   onSubmit(){
     this.spinnerService.show();
 
@@ -173,9 +185,10 @@ export class SolicitudPermisoComponent implements OnInit {
     let MotivoPermiso = this.SolicitudPermisoForm.controls["MotivoPermiso"].value;
     let HoraInicio = this.SolicitudPermisoForm.controls["HoraInicio"].value;
     let FechaInicio = this.SolicitudPermisoForm.controls["FechaInicio"].value;
+    FechaInicio = this.AsignarFormatoFecha(FechaInicio);
     let HoraFin = this.SolicitudPermisoForm.controls["HoraFin"].value;
     let FechaFin = this.SolicitudPermisoForm.controls["FechaFin"].value;
-
+    FechaFin = this.AsignarFormatoFecha(FechaFin);
     let ObjSolicitudPermisos = {
         SolicitanteId: this.usuarioActual.idUsuario,
         TipoPermiso: TipoPermiso,
