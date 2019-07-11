@@ -39,13 +39,14 @@ export class ValidarSolicitudComponent implements OnInit {
   UsuarioHG: boolean;
   ComentarioGH: boolean;
   MensajeAccion: string;
+  objUsuariosGH: any[]=[];
 
   constructor( 
     private formBuilder: FormBuilder, 
     public toastr: ToastrManager,     
     private spinnerService: Ng4LoadingSpinnerService,
     private servicio: SPServicio,
-    private route: ActivatedRoute,) { 
+    private route: ActivatedRoute) { 
     this.otroTipoPermiso = false;
     this.TipoPermiso = "";
     this.minDateFechaInicio = new Date();
@@ -89,9 +90,12 @@ export class ValidarSolicitudComponent implements OnInit {
   }
 
   ValidarUsuarioGH(){
-    this.servicio.ValidarUsuarioGH(this.usuarioActual.idUsuario).then(
+    this.servicio.ObtenerUsuarioGH().then(
       (res)=>{
-        if (res.length > 0) {
+        let objUsuariosGH = [];
+        this.objUsuariosGH = res[0].GestionHumanaId;
+        let usuarioGH = this.objUsuariosGH.filter(x=> x === this.usuarioActual.idUsuario);
+        if (usuarioGH.length > 0) {
             this.UsuarioHG = true;
         }
         else{
@@ -240,14 +244,14 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: true,
       Estado: "En revision GH",
-      ResponsableActualId: -1
+      ResponsableActualId: this.objUsuariosGH[0]
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
-          ResponsableActualId: -1,
+          ResponsableActualId: this.objUsuariosGH[0],
           Estado: "En revision GH"
         }
         this.enviarNotificacion(objServicio, "Aprobada");
