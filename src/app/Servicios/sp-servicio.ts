@@ -108,7 +108,7 @@ export class SPServicio {
     }
     
     ObtenerUsuarioGH(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
         return respuesta;
     }
     
