@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2Mjg1Nzc5OCwibmJmIjoxNTYyODU3Nzk4LCJleHAiOjE1NjI4ODY4OTgsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.Rd2wCkOE3iyiFRsQO2evWby-ERt1lbdiIf9sViCtJAf5-PfioGDaVORQd0voz37JHa55hEfVEWWKeMJbLym7PGcL6hLaFmMugB4_KQ9gud7vlUDaJu6nPzYZX8b9guD4wd3bTOmagZJabm9X08NaG0oHTA5mb8pvJSvFWYwVCk-GReO0OvgtURVPXnzWnyFhe58Cdt-8RTUg3_CixioIs4bgfo9mjyT2pOHwwCeDPmd7rpLq19HXQ-fouPuiG2NyC0HkCbVQgx7dUA8vPcMl5Q3d2Zyjyg8lAmBKQRSYMV96LSLNmYFY9FgxLC86tCJ3KlLwpcoPy8qK1Ljs6FHG2g'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTgwMDA1NSwibmJmIjoxNTY1ODAwMDU1LCJleHAiOjE1NjU4MjkxNTUsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.RunQU3LDMwQtTAGcbA4IRZAUGPp2GReQ4N1msPsgDk_49UK9gVbOLxidnIrTCDX8nqocF8CP_0LRFMjlWtnv1SYtM4Ms3hj4221oxQ8cBApkxzSxgV3NH0gHn5-0M8kgNMQEQTBO7H8yXX4vtbPDa1OipvE28hgD-3IswFPOdAyj7Od2mMFbII-8SLuC4jNFvtG7TxqTvcMrOllZMQRhCFE-WlYf3NwDBZjhQ0wpxXoTTuuTAf6XFfE3a1d2eDfVtew1npkd8wdX5RuuQDNEtAfvKht6udEVSdOQF-qrh_ceFAAwqXDkIccUInpaJYNiEmGXqMxQVwCl0ee6TzXdsw'
             }
         }, environment.urlWeb);
 
@@ -88,7 +88,7 @@ export class SPServicio {
     }
 
     ObtenerServicio(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Solicitud de permisos'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Solicitud de permisos'").getAll();
         return respuesta;
     }
 
@@ -103,17 +103,17 @@ export class SPServicio {
     }
 
     ValidarUsuarioGH(idUsuarioGH){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("GestionHumanaId eq '"+idUsuarioGH+"'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("GestionHumanaId eq '"+idUsuarioGH+"'").getAll();
         return respuesta;
     }
     
     ObtenerUsuarioGH(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
         return respuesta;
     }
     
     obtenerSolicitudesGH(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Estado eq 'En revision GH'").select("*","Solicitante/Title").expand("Solicitante").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Estado eq 'En revision GH'").select("*","Solicitante/Title").expand("Solicitante").getAll();
         return respuesta;
     }
 

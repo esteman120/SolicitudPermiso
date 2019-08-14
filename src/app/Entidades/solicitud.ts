@@ -10,7 +10,7 @@ export class Solicitud{
         public fechaInicioPermiso?: string,
         public fechaFinPermiso?: string,
         public estado?: string,
-        public responsableActual?: number,
+        public responsableActual?: any,
         public EmailSolicitante?: string,
         public ObservacionGH?: string)
         {

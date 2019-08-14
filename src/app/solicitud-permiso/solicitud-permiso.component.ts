@@ -64,7 +64,7 @@ export class SolicitudPermisoComponent implements OnInit {
   ObtenerUsuarioActual() {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (respuesta) => {
-        this.usuarioActual = new Usuario(respuesta.Id);        
+        this.usuarioActual = new Usuario(respuesta.Id);     
         this.ObtenerEmpleado();
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
@@ -200,7 +200,9 @@ export class SolicitudPermisoComponent implements OnInit {
         HoraFinPermiso: HoraFin,
         FechaSolicitud: new Date(),
         Estado: "En revision jefe",
-        ResponsableActualId: this.usuarioActual.IdJefeDirecto
+        ResponsableActualId: {
+          results: [this.usuarioActual.IdJefeDirecto]
+        }
     }
 
     this.servicio.GuardarSolicitud(ObjSolicitudPermisos).then(
@@ -234,7 +236,9 @@ export class SolicitudPermisoComponent implements OnInit {
           
           let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>El usuario <strong>'+this.usuarioActual.nombre+'</strong> le ha enviado una solicitud de permisos</p>';
+                            '<p>El usuario <strong>'+this.usuarioActual.nombre+'</strong> le ha enviado una solicitud de permisos</p>' +
+                            '<br>'+
+                            '<p>Por favor revisar la bandeja de pendientes en el<a href="https://aribasas.sharepoint.com/sites/Intranet"> home de la intranet</a></p>';
 
           const emailProps: EmailProperties = {
             To: [this.usuarioActual.EmailJefe ],
