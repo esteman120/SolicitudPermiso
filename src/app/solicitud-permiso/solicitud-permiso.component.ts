@@ -35,7 +35,9 @@ export class SolicitudPermisoComponent implements OnInit {
     private servicio: SPServicio) { 
     this.otroTipoPermiso = false;
     this.TipoPermiso = "";
-    this.minDateFechaInicio = new Date();
+    let subDays = new Date()
+    subDays.setDate(subDays.getDate() - 7)
+    this.minDateFechaInicio = (new Date(subDays));
   }
 
   ngOnInit() {
