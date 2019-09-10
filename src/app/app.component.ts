@@ -20,15 +20,13 @@ export class AppComponent {
     this.ObtenerUsuarioActual();
   }
 
-  ObtenerUsuarioActual() {
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (respuesta) => {
-        this.usuario = new Usuario(respuesta.Id);        
-        this.nombreUsuario = this.usuario.nombre;
-        sessionStorage.setItem('usuario', JSON.stringify(this.usuario));  
-      }, err => {
-        console.log('Error obteniendo usuario: ' + err);
-      }
-    )
-  }
+ObtenerUsuarioActual() {
+  this.servicio.ObtenerUsuarioActual().subscribe(
+    (respuesta) => {                
+      this.nombreUsuario = respuesta.Title;          
+    }, err => {
+      console.log('Error obteniendo usuario: ' + err);
+    }
+  )
+}
 }
