@@ -149,11 +149,10 @@ export class ValidarSolicitudComponent implements OnInit {
         this.SolicitudPermisoForm.controls["FechaFin"].setValue(this.ObjSolicitud[0].fechaFinPermiso);
         this.SolicitudPermisoForm.controls["ObservacionGH"].setValue(this.ObjSolicitud[0].ObservacionGH);
         this.EmailSolicitante = this.ObjSolicitud[0].EmailSolicitante;
+        let actualUser = this.ObjSolicitud[0].responsableActual.find(x=> x === this.usuarioActual.idUsuario);
+        console.log(actualUser);
         if (this.ObjSolicitud[0].tipoPermiso === "Otro") {
           this.otroTipoPermiso = true;
-        }
-        if(this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === this.ObjSolicitud[0].responsableActual)){
-          this.AprobarJefe = true;
         }
         if (this.ObjSolicitud[0].estado === "En revision GH" && this.UsuarioHG === true) {
           this.RecepcionGH = true;
@@ -163,6 +162,13 @@ export class ValidarSolicitudComponent implements OnInit {
         if (this.ObjSolicitud[0].estado === "Recibido por GH") {          
             this.ComentarioGH = true;
             this.SolicitudPermisoForm.controls["ObservacionGH"].disable();
+        }
+        
+        if (actualUser !== undefined) {
+
+          if (this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === actualUser)) {
+            this.AprobarJefe = true;
+          }
         }
         
         this.ObtenerSolicitante(this.ObjSolicitud[0].idUsuario);
@@ -244,14 +250,14 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: true,
       Estado: "En revision GH",
-      ResponsableActualId: this.objUsuariosGH[0]
+      ResponsableActualId: this.objUsuariosGH
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
-          ResponsableActualId: this.objUsuariosGH[0],
+          ResponsableActualId: this.objUsuariosGH,
           Estado: "En revision GH"
         }
         this.enviarNotificacion(objServicio, "Aprobada");
@@ -325,13 +331,17 @@ export class ValidarSolicitudComponent implements OnInit {
   }
 
   enviarNotificacion(objServicio, accion): any {
-   
+    let correos = "";
           let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
                             '<p>Se le informa que la solicitud de permiso ha sido '+accion+'</p>';
-
+          this.objUsuariosGH.forEach(element => {
+            correos += element.EMail
+            console.log(correos);
+          });
           const emailProps: EmailProperties = {
-            To: [this.EmailSolicitante],
+            To: [correos],
+            CC: [this.EmailSolicitante],
             Subject: "Notificación de solicitud de permiso",
             Body: TextoCorreo,
           };
