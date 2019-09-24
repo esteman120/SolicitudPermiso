@@ -149,7 +149,7 @@ export class ValidarSolicitudComponent implements OnInit {
         this.SolicitudPermisoForm.controls["FechaFin"].setValue(this.ObjSolicitud[0].fechaFinPermiso);
         this.SolicitudPermisoForm.controls["ObservacionGH"].setValue(this.ObjSolicitud[0].ObservacionGH);
         this.EmailSolicitante = this.ObjSolicitud[0].EmailSolicitante;
-        let actualUser = this.ObjSolicitud[0].responsableActual.filter(x=> x === this.usuarioActual.idUsuario);
+        let actualUser = this.ObjSolicitud[0].responsableActual.find(x=> x === this.usuarioActual.idUsuario);
         console.log(actualUser);
         if (this.ObjSolicitud[0].tipoPermiso === "Otro") {
           this.otroTipoPermiso = true;
@@ -164,9 +164,9 @@ export class ValidarSolicitudComponent implements OnInit {
             this.SolicitudPermisoForm.controls["ObservacionGH"].disable();
         }
         
-        if (actualUser.length > 0) {
+        if (actualUser !== undefined) {
 
-          if (this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === actualUser.id)) {
+          if (this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === actualUser)) {
             this.AprobarJefe = true;
           }
         }
