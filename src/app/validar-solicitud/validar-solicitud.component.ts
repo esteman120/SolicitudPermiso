@@ -250,7 +250,8 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: true,
       Estado: "En revision GH",
-      ResponsableActualId: this.objUsuariosGH
+      ResponsableActualId: {
+        results: this.objUsuariosGH}
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
