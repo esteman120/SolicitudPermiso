@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Compiler } from '@angular/core';
 import { ItemAddResult, EmailProperties } from '@pnp/sp';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SPServicio } from '../Servicios/sp-servicio';
@@ -46,7 +46,9 @@ export class ValidarSolicitudComponent implements OnInit {
     public toastr: ToastrManager,     
     private spinnerService: Ng4LoadingSpinnerService,
     private servicio: SPServicio,
-    private route: ActivatedRoute) { 
+    private route: ActivatedRoute,
+    private compilador: Compiler) { 
+    this.compilador.clearCache(); 
     this.otroTipoPermiso = false;
     this.TipoPermiso = "";
     this.minDateFechaInicio = new Date();
