@@ -93,8 +93,8 @@ export class ValidarSolicitudComponent implements OnInit {
     this.servicio.ObtenerUsuarioGH().then(
       (res)=>{
         let objUsuariosGH = [];
-        this.objUsuariosGH = res[0].GestionHumanaId;
-        let usuarioGH = this.objUsuariosGH.filter(x=> x === this.usuarioActual.idUsuario);
+        this.objUsuariosGH.push({id: res[0].GestionHumanaId, email: res[0].GestionHumana[0].EMail })
+        let usuarioGH = this.objUsuariosGH[0].id.filter(x=> x === this.usuarioActual.idUsuario);
         if (usuarioGH.length > 0) {
             this.UsuarioHG = true;
         }
@@ -251,14 +251,14 @@ export class ValidarSolicitudComponent implements OnInit {
       AprobacionLider: true,
       Estado: "En revision GH",
       ResponsableActualId: {
-        results: this.objUsuariosGH}
+        results: this.objUsuariosGH[0].id}
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
-          ResponsableActualId: this.objUsuariosGH,
+          ResponsableActualId: this.objUsuariosGH[0].id[0],
           Estado: "En revision GH"
         }
         this.enviarNotificacion(objServicio, "Aprobada");
@@ -336,10 +336,11 @@ export class ValidarSolicitudComponent implements OnInit {
           let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
                             '<p>Se le informa que la solicitud de permiso ha sido '+accion+'</p>';
-          this.objUsuariosGH.forEach(element => {
-            correos += element.EMail
-            console.log(correos);
-          });
+          correos = this.objUsuariosGH[0].email;
+          // this.objUsuariosGH.forEach(element => {
+          //   correos += element.EMail
+          //   console.log(correos);
+          // });
           const emailProps: EmailProperties = {
             To: [correos],
             CC: [this.EmailSolicitante],
