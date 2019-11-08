@@ -283,7 +283,7 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: false,
       Estado: "Rechazado",
-      ResponsableActualId: -1
+      ResponsableActualId: {results:[-1]}
     }
 
     this.MensajeAccion = "La solicitud ha sido rechazada con éxito";
@@ -312,7 +312,7 @@ export class ValidarSolicitudComponent implements OnInit {
       HoraRecepcionGH: hora,
       FechaRecepcionGH: fecha,
       Estado: "Recibido por GH",
-      ResponsableActualId: -1,
+      ResponsableActualId: {results:[-1]},
       ObservacionGH: observacionGH
     }
     this.MensajeAccion = "La solicitud ha sido recibida con éxito";
