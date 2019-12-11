@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Compiler } from '@angular/core';
 import { ItemAddResult, EmailProperties } from '@pnp/sp';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SPServicio } from '../Servicios/sp-servicio';
@@ -46,7 +46,9 @@ export class ValidarSolicitudComponent implements OnInit {
     public toastr: ToastrManager,     
     private spinnerService: Ng4LoadingSpinnerService,
     private servicio: SPServicio,
-    private route: ActivatedRoute) { 
+    private route: ActivatedRoute,
+    private compilador: Compiler) { 
+    this.compilador.clearCache(); 
     this.otroTipoPermiso = false;
     this.TipoPermiso = "";
     this.minDateFechaInicio = new Date();
@@ -149,8 +151,8 @@ export class ValidarSolicitudComponent implements OnInit {
         this.SolicitudPermisoForm.controls["FechaFin"].setValue(this.ObjSolicitud[0].fechaFinPermiso);
         this.SolicitudPermisoForm.controls["ObservacionGH"].setValue(this.ObjSolicitud[0].ObservacionGH);
         this.EmailSolicitante = this.ObjSolicitud[0].EmailSolicitante;
-        let actualUser = this.ObjSolicitud[0].responsableActual.find(x=> x === this.usuarioActual.idUsuario);
-        console.log(actualUser);
+        // let actualUser = this.ObjSolicitud[0].responsableActual.find(x=> x === this.usuarioActual.idUsuario);
+        // console.log(actualUser);
         if (this.ObjSolicitud[0].tipoPermiso === "Otro") {
           this.otroTipoPermiso = true;
         }
@@ -163,13 +165,10 @@ export class ValidarSolicitudComponent implements OnInit {
             this.ComentarioGH = true;
             this.SolicitudPermisoForm.controls["ObservacionGH"].disable();
         }
-        
-        if (actualUser !== undefined) {
 
-          if (this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === actualUser)) {
-            this.AprobarJefe = true;
-          }
-        }
+        if (this.ObjSolicitud[0].estado === "En revision jefe" && (this.usuarioActual.idUsuario === this.ObjSolicitud[0].responsableActual)) {
+          this.AprobarJefe = true;
+        }        
         
         this.ObtenerSolicitante(this.ObjSolicitud[0].idUsuario);
       }
@@ -250,8 +249,7 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: true,
       Estado: "En revision GH",
-      ResponsableActualId: {
-        results: this.objUsuariosGH[0].id}
+      ResponsableActualId: this.objUsuariosGH[0].id[0]
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
@@ -281,14 +279,14 @@ export class ValidarSolicitudComponent implements OnInit {
       FechaAprobacionLider: fecha,
       AprobacionLider: false,
       Estado: "Rechazado",
-      ResponsableActualId: {results:[-1]}
+      ResponsableActualId: null
     }
 
     this.MensajeAccion = "La solicitud ha sido rechazada con éxito";
     this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
-          ResponsableActualId: -1,
+          ResponsableActualId: null,
           Estado: "Rechazado"
         }
         this.enviarNotificacion(objServicio, "Rechazada");
@@ -310,14 +308,14 @@ export class ValidarSolicitudComponent implements OnInit {
       HoraRecepcionGH: hora,
       FechaRecepcionGH: fecha,
       Estado: "Recibido por GH",
-      ResponsableActualId: {results:[-1]},
+      ResponsableActualId: null,
       ObservacionGH: observacionGH
     }
     this.MensajeAccion = "La solicitud ha sido recibida con éxito";
     this.servicio.GuardarRecepcionGH(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
         let objServicio = {          
-          ResponsableActualId: -1,
+          ResponsableActualId: null,
           Estado: "Recibido por GH"
         }
         

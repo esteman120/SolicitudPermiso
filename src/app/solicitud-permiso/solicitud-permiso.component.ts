@@ -202,9 +202,7 @@ export class SolicitudPermisoComponent implements OnInit {
         HoraFinPermiso: HoraFin,
         FechaSolicitud: new Date(),
         Estado: "En revision jefe",
-        ResponsableActualId: {
-          results: [this.usuarioActual.IdJefeDirecto]
-        }
+        ResponsableActualId: this.usuarioActual.IdJefeDirecto
     }
 
     this.servicio.GuardarSolicitud(ObjSolicitudPermisos).then(
