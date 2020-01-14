@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2Mjg1Nzc5OCwibmJmIjoxNTYyODU3Nzk4LCJleHAiOjE1NjI4ODY4OTgsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.Rd2wCkOE3iyiFRsQO2evWby-ERt1lbdiIf9sViCtJAf5-PfioGDaVORQd0voz37JHa55hEfVEWWKeMJbLym7PGcL6hLaFmMugB4_KQ9gud7vlUDaJu6nPzYZX8b9guD4wd3bTOmagZJabm9X08NaG0oHTA5mb8pvJSvFWYwVCk-GReO0OvgtURVPXnzWnyFhe58Cdt-8RTUg3_CixioIs4bgfo9mjyT2pOHwwCeDPmd7rpLq19HXQ-fouPuiG2NyC0HkCbVQgx7dUA8vPcMl5Q3d2Zyjyg8lAmBKQRSYMV96LSLNmYFY9FgxLC86tCJ3KlLwpcoPy8qK1Ljs6FHG2g'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkJCOENlRlZxeWFHckdOdWVoSklpTDRkZmp6dyIsImtpZCI6IkJCOENlRlZxeWFHckdOdWVoSklpTDRkZmp6dyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU3NjA3MzE1OCwibmJmIjoxNTc2MDczMTU4LCJleHAiOjE1NzYxMDIyNTgsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.dOq9n8U-w2Zl_vtAMQw2do4_0S0DC6RBOJu89rBdtLALck5wWAL4lZeKxXOUJF4oOwPlXf0LfiV4u0y82cJ37vh1mmzn37rBJoVjXB0E6wg8OQAlUMcgR0Xa7FU-RqbnizEOydyGEq-GATGJLlGxq7BXJqIG3B2HPx13ixlfHVXVv6LOlDE_H91Ha3E_7lh_GCs8XxwBY0i9MR_NtMZ2S2PM7a3S1wyAjBlXRQSMWOC8qpkCej0d-19CDFyltLYOZ5oC5RTmLb-43wDoJzKbKj0iqa3kvclQqoR9TPhIeIfeDnSXVK_qfLg4j3dxh6VtD7JEFZj7x8NslUIbU5kyTg'
             }
         }, environment.urlWeb);
 
@@ -45,7 +45,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2Mjg2NTM1MiwibmJmIjoxNTYyODY1MzUyLCJleHAiOjE1NjI4OTQ0NTIsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.fbuUjQzeiZWD4jjdJ_FoCKfKTVx_VVhN_KoR3OZQJL-meOMHWa8w9UBHeqzEIsemWF5_l0oiY-ioE4-Srdj8xL179OQFoyWGC1EuzkeJS3qvwFxkGXsU8eKR5JCquNHsGTxmIV2HGWZQJ26zHiimEqadOgjAOu7EPuqx3VKXfBRwoFyUcufneUaLbbFi_AxC2NiLaarDVgrJ4OGG9V_pca5gdwCCq1slRMrwvPq8H0l5lhIbUke2i8Mep_XqIauTIzGResFSAB7ZmHbVcLYTeSNhgpHFIY8ub2f2_rwp-IK02l3UjngQeJ3PgMJh9wjdqqJp0gh6Qu2DMShqb5uZIQ"'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkJCOENlRlZxeWFHckdOdWVoSklpTDRkZmp6dyIsImtpZCI6IkJCOENlRlZxeWFHckdOdWVoSklpTDRkZmp6dyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU3NjA3MzE4MiwibmJmIjoxNTc2MDczMTgyLCJleHAiOjE1NzYxMDIyODIsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.XYzeKNL4aDE9LWFK4z-Bhvf1Y9VY4nkDvuPcJGMk-vw8V1uP8gzNnhJ14VLablGVzBeKprt2oEPflRdlSx4a7ARuTOVFLkrf9P4evcNfE9F2Fl-WW5USF8iKPjAnKlsJTPy33D5G2HfbIwXYVGXJhK9RGDY8xFDMG-MbDPaJDVyHhCzRks5kAIKI38fAW75xZqsReDPjRQiuD29eF0Lko_8VkInTkSlwhxSA-7Chfp8LZWwUBZZRXAsREOZO3ebHt3suO1hVswX1Gf3LO1f3ZBcRJE1KmwgGk395wK4JjBMgdT9Kbrbwtn22ggeX441CSRD8M_GFwhHY6qtO0JpUzg'
             }
         }, environment.urlWeb);
 
@@ -108,7 +108,7 @@ export class SPServicio {
     }
     
     ObtenerUsuarioGH(){
-        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.select("*,GestionHumana/EMail").expand("GestionHumana").getAll();
         return respuesta;
     }
     
@@ -125,7 +125,7 @@ export class SPServicio {
     // async AgregarHojaDeVida(nombre, archivo: File, objItems): Promise<any>{
     //     let mensaje = ""
         
-    //     let respuesta = await this.ObtenerConfiguracion().web.getFolderByServerRelativeUrl("Prueba/Esteban").files.add(nombre, archivo).then(
+    //     let respuesta = await this.ObtenerConfiguracionConPost().web.getFolderByServerRelativeUrl("Prueba/Esteban").files.add(nombre, archivo).then(
     //         f=>{
                 
     //             f.file.getItem().then(item => {
