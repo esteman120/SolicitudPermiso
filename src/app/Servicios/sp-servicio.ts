@@ -68,22 +68,22 @@ export class SPServicio {
     }
 
     GuardarSolicitud(ObjSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.add(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.add(ObjSolicitud);
         return respuesta;
     }
 
     GuardarServicio(ObjServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
         return respuesta;
     }
 
     consultarSolicitudPermiso(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Id eq "+idSolicitud).select("*","Solicitante/Title","Solicitante/EMail").expand("Solicitante").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Id eq "+idSolicitud).select("*","Solicitante/Title","Solicitante/EMail").expand("Solicitante").getAll();
         return respuesta;
     }
 
     GuardarRespuestaJefe(ObjSolicitud, IdSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
         return respuesta;
     }
 
@@ -93,12 +93,12 @@ export class SPServicio {
     }
 
     ModificarServicio(ObjServicio, idServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
         return respuesta; 
     }
 
     GuardarRecepcionGH(ObjSolicitud, IdSolicitud) {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.getById(IdSolicitud).update(ObjSolicitud);
         return respuesta;
     }
 
@@ -118,7 +118,7 @@ export class SPServicio {
     }
 
     EnviarNotificacion(objNotificacion){
-        let respuesta = this.ObtenerConfiguracionConPost().utility.sendEmail(objNotificacion);
+        let respuesta = this.ObtenerConfiguracion().utility.sendEmail(objNotificacion);
         return respuesta;
     }
 
