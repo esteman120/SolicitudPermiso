@@ -11,6 +11,10 @@ import { debug } from 'util';
 import { ActivatedRoute } from '@angular/router';
 import SimpleCrypto from "simple-crypto-js";
 import * as CryptoJS from 'crypto-js';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-validar-solicitud',
@@ -386,5 +390,106 @@ export class ValidarSolicitudComponent implements OnInit {
     );
   }
 
+  formatearFecha(fecha) {
+    let fecha1 = fecha.split('T');
+    let fecha2 = fecha1[0].split('-');
+    return `${fecha2[2]}/${fecha2[1]}/${fecha2[0]}`
+  }
+
+  generarPdf() {
+    let fechaInicio = this.formatearFecha(this.SolicitudPermisoForm.controls["FechaInicio"].value);
+    let fechaFin = this.formatearFecha(this.SolicitudPermisoForm.controls["FechaFin"].value);
+    let horaInicio = this.SolicitudPermisoForm.controls["HoraInicio"].value;
+    let horaFin = this.SolicitudPermisoForm.controls["HoraFin"].value;
+    let horaFechaInicio = `${fechaInicio} - ${horaInicio}`;
+    let horaFechaFin = `${fechaFin} - ${horaFin}`;
+    const documentDefinition = {
+      watermark: { text: 'APROBADO', color: 'blue', opacity: 0.1, italics: false },
+      content: [
+        {text: 'Solicitud de permisos', style: 'header'},
+        {
+          style: 'marginTable',
+          table: {
+            widths: [135, 135, 90],
+            heights: [20, 20],
+            body: [
+              [{text: 'Apellidos', bold: true,alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Nombres', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, false, true]}, {text: 'Cédula', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["Apellidos"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["Nombres"].value, alignment: 'center', border: [false, true, false, true]}, {text: this.SolicitudPermisoForm.controls["Cedula"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {
+          style: 'marginTable',
+          table: {
+            widths: [135, 135, 90],
+            heights: [20, 20],
+            body: [
+              [{text: 'Cargo-Rol', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Unidad de negocio', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, false, true]}, {text: 'Teléfono', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["CargoRol"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["UnidadNegocio"].value, alignment: 'center', border: [false, false, false, true]}, {text: this.SolicitudPermisoForm.controls["TelefonoExt"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {text: 'Descripción', style: 'header2'},
+        {
+          style: 'marginTable2',
+          table: {
+            widths: [184, 184],
+            heights: [20, 20],
+            body: [
+              [{text: 'Tipo de permiso', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Motivo del permiso', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["TipoPermiso"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["MotivoPermiso"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {
+          style: 'marginTable3',
+          table: {
+            widths: [376],
+            heights: [20, 20],
+            body: [
+              [{text: 'Otro ¿Cuál?', bold: true, alignment: 'center', fillColor: '#eeeeee'}],
+              [{text: this.SolicitudPermisoForm.controls["OtroMotivo"].value, alignment: 'center'}]
+            ]
+          }
+        },
+        {text: 'Duración del permiso', style: 'header2'},
+        {
+          style: 'marginTable2',
+          table: {
+            widths: [184, 184],
+            heights: [20, 20],
+            body: [
+              [{text: 'Fecha y hora de inicio', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Fecha y hora de finalización', bold: true, alignment: 'center',  fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: horaFechaInicio, alignment: 'center', border: [true, false, false, true]}, {text: horaFechaFin, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 20,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 90, 0, 30]
+        },
+        marginTable: {
+          margin: [70, 0, 0, 20],
+        },
+        header2: {
+          fontSize: 20,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 5, 0, 15]
+        },
+        marginTable2: {
+          margin: [70, 15, 0, 10]
+        },
+        marginTable3: {
+          margin: [70, 0, 0, 20]
+        }
+      }
+    }
+    pdfMake.createPdf(documentDefinition).open();
+  }
 
 }
