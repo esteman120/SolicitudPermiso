@@ -279,7 +279,4 @@ export class SolicitudPermisoComponent implements OnInit {
         }
       )       
   }
-
-
-
 }
