@@ -1,10 +1,10 @@
 
 export const environment = {
   production: false,
-  urlRaiz: 'https://enovelsoluciones.sharepoint.com/',
-  urlWebServicio: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios', 
-  urlWebGH: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/gestion-humana', 
-  urlReltativa: 'sites/IntranetAraujo/servicios',
+  urlRaiz: 'https://enovelsoluciones.sharepoint.com',
+  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios', 
+  urlWebGH: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Gestion-humana', 
+  urlReltativa: 'sites/Intranet/Servicios',  
   ListaEmpleados: 'Empleados',
   ListaServicios: 'Servicios',
   ListaSolicitudPermisos: 'SolicitudPermisos',
