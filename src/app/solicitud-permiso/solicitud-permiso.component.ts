@@ -278,7 +278,7 @@ export class SolicitudPermisoComponent implements OnInit {
                             '<br>'+
                             '<p>El usuario <strong>'+this.usuarioActual.nombre+'</strong> le ha enviado una solicitud de permisos</p>' +
                             '<br>'+
-                            '<p>Por favor revisar la bandeja de pendientes en el<a href="https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo"> home de la intranet</a></p>';
+                            '<p>Por favor revisar la bandeja de pendientes en el<a href="https://aribasas.sharepoint.com/sites/Intranet/"> home de la intranet</a></p>';
 
           const emailProps: EmailProperties = {
             To: [this.usuarioActual.EmailJefe ],
@@ -290,7 +290,7 @@ export class SolicitudPermisoComponent implements OnInit {
                   this.MostrarExitoso("Solicitud enviada con éxito");
                   setTimeout(
                     ()=>{
-                      window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                      window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet/';
                       this.spinnerService.hide();
                     },2000);
             }
@@ -299,7 +299,7 @@ export class SolicitudPermisoComponent implements OnInit {
               this.mostrarError("Error al enviar la notificacion");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet/';
                   this.spinnerService.hide();
                 },2000);
               
