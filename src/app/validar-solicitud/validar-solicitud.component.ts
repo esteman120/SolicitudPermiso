@@ -11,6 +11,10 @@ import { debug } from 'util';
 import { ActivatedRoute } from '@angular/router';
 import SimpleCrypto from "simple-crypto-js";
 import * as CryptoJS from 'crypto-js';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-validar-solicitud',
@@ -239,7 +243,7 @@ export class ValidarSolicitudComponent implements OnInit {
     this.toastr.infoToastr(mensaje, 'Información importante');
   }
    
-  AprobarSolicitud(){
+  async AprobarSolicitud(){
     this.spinnerService.show(); 
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
@@ -253,24 +257,49 @@ export class ValidarSolicitudComponent implements OnInit {
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
-    this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
+
+    let respu = await this.GuardarRespuestaJefe(ObjRespuestaJefe);
+
+    if (!respu.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: this.objUsuariosGH[0].id[0],
+      Estado: "En revision GH"
+    }
+
+    let respServ = await this.guardarServicio(objServicio);  
+
+    
+    this.enviarNotificacion("Aprobada");
+    
+  }
+
+  async GuardarRespuestaJefe(ObjRespuestaJefe): Promise<any> {
+    let resp;
+    await this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: this.objUsuariosGH[0].id[0],
-          Estado: "En revision GH"
-        }
-        this.enviarNotificacion(objServicio, "Aprobada");
-        // this.guardarServicio(objServicio);   
+        resp = {
+          resp: true
+        }        
       }
     ).catch(
       (error)=>{
         console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
+        this.mostrarError("Error al aprobar la solicitud");  
+        resp = {
+          resp: false
+        }        
       }
     );
+
+    return resp;
   }
   
-  RechazarSolicitud(){
+  async RechazarSolicitud(){
+    this.spinnerService.show();
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 
@@ -283,28 +312,30 @@ export class ValidarSolicitudComponent implements OnInit {
     }
 
     this.MensajeAccion = "La solicitud ha sido rechazada con éxito";
-    this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
-      (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: null,
-          Estado: "Rechazado"
-        }
-        this.enviarNotificacion(objServicio, "Rechazada");
-        // this.guardarServicio(objServicio);   
-      }
-    ).catch(
-      (error)=>{
-        console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
-      }
-    );
+
+    let respu = await this.GuardarRespuestaJefe(ObjRespuestaJefe);
+
+    if (!respu.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: null,
+      Estado: "Rechazado"
+    }
+
+    let respServ = await this.guardarServicio(objServicio);
+    
+    this.enviarNotificacion("Rechazada");
   }
 
-  RecibirSolicitud(){
+  async RecibirSolicitud(){
+    this.spinnerService.show()
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
     let observacionGH = this.SolicitudPermisoForm.controls["ObservacionGH"].value;
-    let ObjRespuestaJefe = {
+    let ObjRespuestaGH = {
       HoraRecepcionGH: hora,
       FechaRecepcionGH: fecha,
       Estado: "Recibido por GH",
@@ -312,33 +343,58 @@ export class ValidarSolicitudComponent implements OnInit {
       ObservacionGH: observacionGH
     }
     this.MensajeAccion = "La solicitud ha sido recibida con éxito";
-    this.servicio.GuardarRecepcionGH(ObjRespuestaJefe, this.idSolicitud).then(
+
+    let respuesta = await this.guardarRecepcionGH(ObjRespuestaGH);
+
+    if (!respuesta.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: null,
+      Estado: "Recibido por GH"
+    }
+    
+    let respServ = await this.guardarServicio(objServicio); 
+    
+    this.MostrarExitoso(this.MensajeAccion);
+    sessionStorage.removeItem("TipoConsulta");
+    setTimeout(
+      ()=>{
+        window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+        this.spinnerService.hide();
+      },2000); 
+    
+  }
+
+  async guardarRecepcionGH(ObjRespuestaGH): Promise<any>{
+    let respuesta;
+    await this.servicio.GuardarRecepcionGH(ObjRespuestaGH, this.idSolicitud).then(
       (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: null,
-          Estado: "Recibido por GH"
+        respuesta = {
+          resp: true
         }
-        
-        this.guardarServicio(objServicio);
       }
     ).catch(
       (error)=>{
         console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
+        this.mostrarError("Error al aprobar la solicitud");  
+        respuesta = {
+          resp: false
+        }      
       }
     );
+
+    return respuesta;
   }
 
-  enviarNotificacion(objServicio, accion): any {
+  enviarNotificacion(accion): any {
     let correos = "";
           let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
                             '<p>Se le informa que la solicitud de permiso ha sido '+accion+'</p>';
           correos = this.objUsuariosGH[0].email;
-          // this.objUsuariosGH.forEach(element => {
-          //   correos += element.EMail
-          //   console.log(correos);
-          // });
           const emailProps: EmailProperties = {
             To: [correos],
             CC: [this.EmailSolicitante],
@@ -347,14 +403,20 @@ export class ValidarSolicitudComponent implements OnInit {
           };
           this.servicio.EnviarNotificacion(emailProps).then(
             (res)=>{
-                  this.guardarServicio(objServicio);                  
+              this.MostrarExitoso(this.MensajeAccion);
+              sessionStorage.removeItem("TipoConsulta");
+              setTimeout(
+                ()=>{
+                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                  this.spinnerService.hide();
+                },2000);          
             }
           ).catch(
             (error)=>{
               this.mostrarError("Error al enviar la notificacion");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
+                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
                   this.spinnerService.hide();
                 },2000);
               
@@ -362,29 +424,126 @@ export class ValidarSolicitudComponent implements OnInit {
           ) 
   }
 
-  guardarServicio(objServicio) {
-    this.servicio.ModificarServicio(objServicio, this.IdServicio).then(
+  async guardarServicio(objServicio): Promise<any> {
+    let respuesta;
+    await this.servicio.ModificarServicio(objServicio, this.IdServicio).then(
         (resultado)=>{
-          this.MostrarExitoso(this.MensajeAccion);
-          sessionStorage.removeItem("TipoConsulta");
-          setTimeout(
-            ()=>{
-              window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
-              this.spinnerService.hide();
-            },2000);
+          respuesta = {
+            resp: true
+          }          
         }
     ).catch(
       (error)=>{
-        console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");
-        setTimeout(
-          ()=>{
-            window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
-            this.spinnerService.hide();
-          },2000);
+        console.log(error); 
+        respuesta = {
+          resp: false
+        }               
       }
     );
+
+    return respuesta;
+  }  
+
+  formatearFecha(fecha) {
+    let fecha1 = fecha.split('T');
+    let fecha2 = fecha1[0].split('-');
+    return `${fecha2[2]}/${fecha2[1]}/${fecha2[0]}`
   }
 
+  generarPdf() {
+    let fechaInicio = this.formatearFecha(this.SolicitudPermisoForm.controls["FechaInicio"].value);
+    let fechaFin = this.formatearFecha(this.SolicitudPermisoForm.controls["FechaFin"].value);
+    let horaInicio = this.SolicitudPermisoForm.controls["HoraInicio"].value;
+    let horaFin = this.SolicitudPermisoForm.controls["HoraFin"].value;
+    let horaFechaInicio = `${fechaInicio} - ${horaInicio}`;
+    let horaFechaFin = `${fechaFin} - ${horaFin}`;
+    const documentDefinition = {
+      watermark: { text: 'APROBADO', color: 'blue', opacity: 0.1, italics: false },
+      content: [
+        {text: 'Solicitud de permisos', style: 'header'},
+        {
+          style: 'marginTable',
+          table: {
+            widths: [135, 135, 90],
+            heights: [20, 20],
+            body: [
+              [{text: 'Apellidos', bold: true,alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Nombres', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, false, true]}, {text: 'Cédula', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["Apellidos"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["Nombres"].value, alignment: 'center', border: [false, true, false, true]}, {text: this.SolicitudPermisoForm.controls["Cedula"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {
+          style: 'marginTable',
+          table: {
+            widths: [135, 135, 90],
+            heights: [20, 20],
+            body: [
+              [{text: 'Cargo-Rol', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Unidad de negocio', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, false, true]}, {text: 'Teléfono', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["CargoRol"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["UnidadNegocio"].value, alignment: 'center', border: [false, false, false, true]}, {text: this.SolicitudPermisoForm.controls["TelefonoExt"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {text: 'Descripción', style: 'header2'},
+        {
+          style: 'marginTable2',
+          table: {
+            widths: [184, 184],
+            heights: [20, 20],
+            body: [
+              [{text: 'Tipo de permiso', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Motivo del permiso', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: this.SolicitudPermisoForm.controls["TipoPermiso"].value, alignment: 'center', border: [true, false, false, true]}, {text: this.SolicitudPermisoForm.controls["MotivoPermiso"].value, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        },
+        {
+          style: 'marginTable3',
+          table: {
+            widths: [376],
+            heights: [20, 20],
+            body: [
+              [{text: 'Otro ¿Cuál?', bold: true, alignment: 'center', fillColor: '#eeeeee'}],
+              [{text: this.SolicitudPermisoForm.controls["OtroMotivo"].value, alignment: 'center'}]
+            ]
+          }
+        },
+        {text: 'Duración del permiso', style: 'header2'},
+        {
+          style: 'marginTable2',
+          table: {
+            widths: [184, 184],
+            heights: [20, 20],
+            body: [
+              [{text: 'Fecha y hora de inicio', bold: true, alignment: 'center', fillColor: '#eeeeee', border: [true, true, false, true]}, {text: 'Fecha y hora de finalización', bold: true, alignment: 'center',  fillColor: '#eeeeee', border: [false, true, true, true]}],
+              [{text: horaFechaInicio, alignment: 'center', border: [true, false, false, true]}, {text: horaFechaFin, alignment: 'center', border: [false, false, true, true]}]
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 20,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 90, 0, 30]
+        },
+        marginTable: {
+          margin: [70, 0, 0, 20],
+        },
+        header2: {
+          fontSize: 20,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 5, 0, 15]
+        },
+        marginTable2: {
+          margin: [70, 15, 0, 10]
+        },
+        marginTable3: {
+          margin: [70, 0, 0, 20]
+        }
+      }
+    }
+    pdfMake.createPdf(documentDefinition).open();
+  }
 
 }

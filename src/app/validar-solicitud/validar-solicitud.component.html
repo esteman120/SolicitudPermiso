@@ -44,7 +44,7 @@
             <hr>
             <div class="row">
                 <div class="col-md-10 offset-md-1">
-                    <mat-radio-group formControlName="TipoPermiso" disabled>
+                    <mat-radio-group formControlName="TipoPermiso" (change)="TipoPermisoSelect($event)" disabled>
                         <mat-radio-button value="Licencia" style="margin-right: 14px;">Licencia</mat-radio-button>
                         <mat-radio-button value="Permiso" style="margin-right: 14px;">Permiso</mat-radio-button>
                         <mat-radio-button value="Trabajo fuera de la planta" style="margin-right: 14px;">Trabajo fuera de la planta</mat-radio-button>
@@ -55,7 +55,7 @@
             <div class="row" *ngIf="otroTipoPermiso">
                 <div class="col-md-5 offset-md-1">
                     <mat-form-field style="width: 100%">
-                        <input matInput placeholder="Cual ?" formControlName="OtroMotivo" readonly>
+                        <input matInput placeholder="¿Cuál?" formControlName="OtroMotivo" readonly>
                     </mat-form-field>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-6">
                                 <mat-form-field style="width: 100%">
-                                    <input matInput [matDatepicker]="picker1" placeholder="Fecha de inicio del permiso" [min]="minDateFechaInicio" formControlName="FechaInicio" disabled readonly>
+                                    <input matInput [matDatepicker]="picker1" placeholder="Fecha de inicio del permiso" [min]="minDateFechaInicio" (dateChange)="setFechaFin($event)" formControlName="FechaInicio" disabled readonly>
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
@@ -143,8 +143,11 @@
         <div *ngIf="RecepcionGH">
             <br>
             <div class="row">
-                <div class="col-4  offset-4">
+                <div class="col-3  offset-4">
                     <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="RecibirSolicitud()">Recibir Solicitud</button>
+                </div>
+                <div class="col-4">
+                    <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="generarPdf()">Generar PDF</button>
                 </div>
             </div>
         </div>
