@@ -44,6 +44,7 @@ export class ValidarSolicitudComponent implements OnInit {
   ComentarioGH: boolean;
   MensajeAccion: string;
   objUsuariosGH: any[]=[];
+  empresa: string;
 
   constructor( 
     private formBuilder: FormBuilder, 
@@ -86,17 +87,26 @@ export class ValidarSolicitudComponent implements OnInit {
 
   ObtenerUsuarioActual() {
     this.servicio.ObtenerUsuarioActual().subscribe(
-      (respuesta) => {
-        this.usuarioActual = new Usuario(respuesta.Id);        
-        this.ValidarUsuarioGH()
+      async (respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Id);
+        await this.obtenerUsuarioEmpresa(respuesta.Id);        
+        await this.ValidarUsuarioGH()
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
       }
     )
   }
 
-  ValidarUsuarioGH(){
-    this.servicio.ObtenerUsuarioGH().then(
+  async obtenerUsuarioEmpresa(id: number) {
+    await this.servicio.obtenerUsuarioListaEmpleados(id).then(
+      (respuesta) => {
+        this.empresa = respuesta[0].Empresa
+      }
+    )
+  }
+
+  async ValidarUsuarioGH(){
+    await this.servicio.ObtenerUsuarioGH(this.empresa).then(
       (res)=>{
         let objUsuariosGH = [];
         this.objUsuariosGH.push({id: res[0].GestionHumanaId, email: res[0].GestionHumana[0].EMail })
@@ -243,7 +253,7 @@ export class ValidarSolicitudComponent implements OnInit {
     this.toastr.infoToastr(mensaje, 'Información importante');
   }
    
-  AprobarSolicitud(){
+  async AprobarSolicitud(){
     this.spinnerService.show(); 
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
@@ -257,24 +267,49 @@ export class ValidarSolicitudComponent implements OnInit {
     }
 
     this.MensajeAccion = "La solicitud se ha aprobado con éxito";
-    this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
+
+    let respu = await this.GuardarRespuestaJefe(ObjRespuestaJefe);
+
+    if (!respu.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: this.objUsuariosGH[0].id[0],
+      Estado: "En revision GH"
+    }
+
+    let respServ = await this.guardarServicio(objServicio);  
+
+    
+    this.enviarNotificacion("Aprobada");
+    
+  }
+
+  async GuardarRespuestaJefe(ObjRespuestaJefe): Promise<any> {
+    let resp;
+    await this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
       (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: this.objUsuariosGH[0].id[0],
-          Estado: "En revision GH"
-        }
-        this.enviarNotificacion(objServicio, "Aprobada");
-        // this.guardarServicio(objServicio);   
+        resp = {
+          resp: true
+        }        
       }
     ).catch(
       (error)=>{
         console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
+        this.mostrarError("Error al aprobar la solicitud");  
+        resp = {
+          resp: false
+        }        
       }
     );
+
+    return resp;
   }
   
-  RechazarSolicitud(){
+  async RechazarSolicitud(){
+    this.spinnerService.show();
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 
@@ -287,28 +322,30 @@ export class ValidarSolicitudComponent implements OnInit {
     }
 
     this.MensajeAccion = "La solicitud ha sido rechazada con éxito";
-    this.servicio.GuardarRespuestaJefe(ObjRespuestaJefe, this.idSolicitud).then(
-      (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: null,
-          Estado: "Rechazado"
-        }
-        this.enviarNotificacion(objServicio, "Rechazada");
-        // this.guardarServicio(objServicio);   
-      }
-    ).catch(
-      (error)=>{
-        console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
-      }
-    );
+
+    let respu = await this.GuardarRespuestaJefe(ObjRespuestaJefe);
+
+    if (!respu.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: null,
+      Estado: "Rechazado"
+    }
+
+    let respServ = await this.guardarServicio(objServicio);
+    
+    this.enviarNotificacion("Rechazada");
   }
 
-  RecibirSolicitud(){
+  async RecibirSolicitud(){
+    this.spinnerService.show()
     let fecha = new Date();
     let hora = fecha.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
     let observacionGH = this.SolicitudPermisoForm.controls["ObservacionGH"].value;
-    let ObjRespuestaJefe = {
+    let ObjRespuestaGH = {
       HoraRecepcionGH: hora,
       FechaRecepcionGH: fecha,
       Estado: "Recibido por GH",
@@ -316,33 +353,58 @@ export class ValidarSolicitudComponent implements OnInit {
       ObservacionGH: observacionGH
     }
     this.MensajeAccion = "La solicitud ha sido recibida con éxito";
-    this.servicio.GuardarRecepcionGH(ObjRespuestaJefe, this.idSolicitud).then(
+
+    let respuesta = await this.guardarRecepcionGH(ObjRespuestaGH);
+
+    if (!respuesta.resp) {
+      this.spinnerService.hide();
+      return false;
+    }
+
+    let objServicio = {          
+      ResponsableActualId: null,
+      Estado: "Recibido por GH"
+    }
+    
+    let respServ = await this.guardarServicio(objServicio); 
+    
+    this.MostrarExitoso(this.MensajeAccion);
+    sessionStorage.removeItem("TipoConsulta");
+    setTimeout(
+      ()=>{
+        window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+        this.spinnerService.hide();
+      },2000); 
+    
+  }
+
+  async guardarRecepcionGH(ObjRespuestaGH): Promise<any>{
+    let respuesta;
+    await this.servicio.GuardarRecepcionGH(ObjRespuestaGH, this.idSolicitud).then(
       (itemResult)=>{
-        let objServicio = {          
-          ResponsableActualId: null,
-          Estado: "Recibido por GH"
+        respuesta = {
+          resp: true
         }
-        
-        this.guardarServicio(objServicio);
       }
     ).catch(
       (error)=>{
         console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");        
+        this.mostrarError("Error al aprobar la solicitud");  
+        respuesta = {
+          resp: false
+        }      
       }
     );
+
+    return respuesta;
   }
 
-  enviarNotificacion(objServicio, accion): any {
+  enviarNotificacion(accion): any {
     let correos = "";
           let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
                             '<p>Se le informa que la solicitud de permiso ha sido '+accion+'</p>';
           correos = this.objUsuariosGH[0].email;
-          // this.objUsuariosGH.forEach(element => {
-          //   correos += element.EMail
-          //   console.log(correos);
-          // });
           const emailProps: EmailProperties = {
             To: [correos],
             CC: [this.EmailSolicitante],
@@ -351,14 +413,20 @@ export class ValidarSolicitudComponent implements OnInit {
           };
           this.servicio.EnviarNotificacion(emailProps).then(
             (res)=>{
-                  this.guardarServicio(objServicio);                  
+              this.MostrarExitoso(this.MensajeAccion);
+              sessionStorage.removeItem("TipoConsulta");
+              setTimeout(
+                ()=>{
+                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                  this.spinnerService.hide();
+                },2000);          
             }
           ).catch(
             (error)=>{
               this.mostrarError("Error al enviar la notificacion");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
+                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
                   this.spinnerService.hide();
                 },2000);
               
@@ -366,29 +434,25 @@ export class ValidarSolicitudComponent implements OnInit {
           ) 
   }
 
-  guardarServicio(objServicio) {
-    this.servicio.ModificarServicio(objServicio, this.IdServicio).then(
+  async guardarServicio(objServicio): Promise<any> {
+    let respuesta;
+    await this.servicio.ModificarServicio(objServicio, this.IdServicio).then(
         (resultado)=>{
-          this.MostrarExitoso(this.MensajeAccion);
-          sessionStorage.removeItem("TipoConsulta");
-          setTimeout(
-            ()=>{
-              window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
-              this.spinnerService.hide();
-            },2000);
+          respuesta = {
+            resp: true
+          }          
         }
     ).catch(
       (error)=>{
-        console.log(error);
-        this.mostrarError("Error al aprobar la solicitud");
-        setTimeout(
-          ()=>{
-            window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
-            this.spinnerService.hide();
-          },2000);
+        console.log(error); 
+        respuesta = {
+          resp: false
+        }               
       }
     );
-  }
+
+    return respuesta;
+  }  
 
   formatearFecha(fecha) {
     let fecha1 = fecha.split('T');

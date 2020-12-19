@@ -23,6 +23,7 @@ export class SolicitudesPendientesComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   ObjSolicitudes: SolicitudesPendientes[];
   adjuntoDiplomas: any;
+  empresa: string;
 
   constructor(private servicio: SPServicio,public toastr: ToastrManager,     
     private spinnerService: Ng4LoadingSpinnerService, private route: ActivatedRoute,private router: Router) { 
@@ -41,17 +42,26 @@ export class SolicitudesPendientesComponent implements OnInit {
 
   ObtenerUsuarioActual() {
     this.servicio.ObtenerUsuarioActual().subscribe(
-      (respuesta) => {
-        this.usuarioActual = new Usuario(respuesta.Id);        
-        this.ValidarUsuarioGH();
+      async(respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Id); 
+        await this.obtenerUsuarioEmpresa(respuesta.Id)       
+        await this.ValidarUsuarioGH();
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
       }
     )
   }
 
-  ValidarUsuarioGH(){
-    this.servicio.ValidarUsuarioGH(this.usuarioActual.idUsuario).then(
+  async obtenerUsuarioEmpresa(id: number) {
+    await this.servicio.obtenerUsuarioListaEmpleados(id).then(
+      (respuesta) => {
+        this.empresa = respuesta[0].Empresa
+      }
+    )
+  }
+
+  async ValidarUsuarioGH(){
+    await this.servicio.ValidarUsuarioGH(this.usuarioActual.idUsuario, this.empresa).then(
       (res)=>{
         if (res.length > 0) {
           this.obtenerSolicitudesGH();
