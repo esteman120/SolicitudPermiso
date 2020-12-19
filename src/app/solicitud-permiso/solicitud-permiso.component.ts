@@ -167,7 +167,7 @@ export class SolicitudPermisoComponent implements OnInit {
     return fechaRetornar;
   }
 
-  onSubmit(){
+  async onSubmit(){
     this.spinnerService.show();
 
     if (this.TipoPermiso === "") {
@@ -205,40 +205,80 @@ export class SolicitudPermisoComponent implements OnInit {
         ResponsableActualId: this.usuarioActual.IdJefeDirecto
     }
 
-    this.servicio.GuardarSolicitud(ObjSolicitudPermisos).then(
-      (resultado: ItemAddResult)=>{
-          
+    
+    let RespSol = await this.guardarSolicitud(ObjSolicitudPermisos);
+    if (!RespSol.resp) {     
+      return false;
+    } 
+    
+    let idSolicitud = RespSol.id;
+    let objServicio = {
+      TipoServicio: "Solicitud de permisos",
+      CodigoServicioId: 1,
+      AutorId: this.usuarioActual.idUsuario,
+      ResponsableActualId: this.usuarioActual.IdJefeDirecto,
+      Estado: "En revision jefe",
+      idServicio: idSolicitud
+    }  
+  
+    let RespServ = await this.guardarServicio(objServicio);
+
+    this.enviarNotificacion();
+    
+  }
+
+  async guardarSolicitud(ObjSolicitudPermisos): Promise<any>{
+    let result;
+    await this.servicio.GuardarSolicitud(ObjSolicitudPermisos).then(
+      (resultado: ItemAddResult)=>{          
           let idSolicitud = resultado.data.Id; 
-          
-          let objServicio = {
-            TipoServicio: "Solicitud de permisos",
-            CodigoServicioId: 1,
-            AutorId: this.usuarioActual.idUsuario,
-            ResponsableActualId: this.usuarioActual.IdJefeDirecto,
-            Estado: "En revision jefe",
-            idServicio: idSolicitud
-          }   
-          this.guardarServicio(objServicio);       
+          result = {
+            resp: true,
+            id: idSolicitud
+          }     
       }
     ).catch(
       (error)=>{
           console.error(error);
           this.mostrarError("Error al enviar la solicitud");
           this.spinnerService.hide(); 
+          result = {
+            resp: false
+          } 
       }
     )
-    
+
+    return result;
   }
 
-  guardarServicio(objServicio){
-      this.servicio.GuardarServicio(objServicio).then(
-        (resultado: ItemAddResult)=>{
-          
-          let TextoCorreo = '<p>Cordial saludo</p>'+
+  async guardarServicio(objServicio): Promise<any>{
+    let result;
+    await this.servicio.GuardarServicio(objServicio).then(
+      (resultado: ItemAddResult)=>{  
+        let idSolicitud = resultado.data.Id;
+        result = {
+          resp: true,
+          id: idSolicitud
+        }
+      }
+    ).catch(
+      (error)=>{
+        console.error(error);
+        result = {
+          resp: false
+        }          
+      }
+    );
+    
+    return result;
+  }
+
+  enviarNotificacion(){
+    let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
                             '<p>El usuario <strong>'+this.usuarioActual.nombre+'</strong> le ha enviado una solicitud de permisos</p>' +
                             '<br>'+
-                            '<p>Por favor revisar la bandeja de pendientes en el<a href="https://aribasas.sharepoint.com/sites/Intranet"> home de la intranet</a></p>';
+                            '<p>Por favor revisar la bandeja de pendientes en el<a href="https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo"> home de la intranet</a></p>';
 
           const emailProps: EmailProperties = {
             To: [this.usuarioActual.EmailJefe ],
@@ -250,7 +290,7 @@ export class SolicitudPermisoComponent implements OnInit {
                   this.MostrarExitoso("Solicitud enviada con éxito");
                   setTimeout(
                     ()=>{
-                      window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
+                      window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
                       this.spinnerService.hide();
                     },2000);
             }
@@ -259,24 +299,11 @@ export class SolicitudPermisoComponent implements OnInit {
               this.mostrarError("Error al enviar la notificacion");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
+                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
                   this.spinnerService.hide();
                 },2000);
               
             }
-          )         
-          
-        }
-      ).catch(
-        (error)=>{
-          console.error(error);
-          this.mostrarError("Error al enviar la solicitud");
-          setTimeout(
-            ()=>{
-              window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet';
-              this.spinnerService.hide();
-            },2000); 
-        }
-      )       
+          ) 
   }
 }

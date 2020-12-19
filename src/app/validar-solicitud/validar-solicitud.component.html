@@ -138,16 +138,15 @@
             <div class="col-6  offset-3">
                 <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="AprobarSolicitud()">Aprobar Solicitud</button>
                 <button type="button" class="btn btn-danger" (click)="RechazarSolicitud()">Rechazar Solicitud</button>
-                <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="generarPdf()">Generar PDF</button>
             </div>
         </div>
         <div *ngIf="RecepcionGH">
             <br>
             <div class="row">
-                <div class="col-4  offset-4">
+                <div class="col-3  offset-4">
                     <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="RecibirSolicitud()">Recibir Solicitud</button>
                 </div>
-                <div class="col-4  offset-4">
+                <div class="col-4">
                     <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="generarPdf()">Generar PDF</button>
                 </div>
             </div>
