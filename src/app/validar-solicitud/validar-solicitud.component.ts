@@ -44,6 +44,7 @@ export class ValidarSolicitudComponent implements OnInit {
   ComentarioGH: boolean;
   MensajeAccion: string;
   objUsuariosGH: any[]=[];
+  empresa: string;
 
   constructor( 
     private formBuilder: FormBuilder, 
@@ -86,17 +87,26 @@ export class ValidarSolicitudComponent implements OnInit {
 
   ObtenerUsuarioActual() {
     this.servicio.ObtenerUsuarioActual().subscribe(
-      (respuesta) => {
-        this.usuarioActual = new Usuario(respuesta.Id);        
-        this.ValidarUsuarioGH()
+      async (respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Id);
+        await this.obtenerUsuarioEmpresa(respuesta.Id);        
+        await this.ValidarUsuarioGH()
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
       }
     )
   }
 
-  ValidarUsuarioGH(){
-    this.servicio.ObtenerUsuarioGH().then(
+  async obtenerUsuarioEmpresa(id: number) {
+    await this.servicio.obtenerUsuarioListaEmpleados(id).then(
+      (respuesta) => {
+        this.empresa = respuesta[0].Empresa
+      }
+    )
+  }
+
+  async ValidarUsuarioGH(){
+    await this.servicio.ObtenerUsuarioGH(this.empresa).then(
       (res)=>{
         let objUsuariosGH = [];
         this.objUsuariosGH.push({id: res[0].GestionHumanaId, email: res[0].GestionHumana[0].EMail })
