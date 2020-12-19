@@ -28,6 +28,8 @@ export class SPServicio {
         return configuracionSharepoint;
     }
 
+   
+
     // public ObtenerConfiguracionConPost() {
     //     const configuracionSharepoint = sp.configure({
     //         headers: {
@@ -50,7 +52,8 @@ export class SPServicio {
     //     }, environment.urlWeb);
 
     //     return configuracionSharepoint;
-    // } 
+    // }
+   
 
     ObtenerUsuarioActual() {
         let respuesta = from(this.ObtenerConfiguracionServicio().web.currentUser.get());
@@ -102,6 +105,7 @@ export class SPServicio {
         return respuesta;
     }
 
+
     ValidarUsuarioGH(idUsuarioGH, Empresa: string){
         let respuesta = this.ObtenerConfiguracionServicio().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("GestionHumanaId eq '"+idUsuarioGH+"' and Empresa eq '"+Empresa+"'").getAll();
         return respuesta;
@@ -111,7 +115,7 @@ export class SPServicio {
         let respuesta = this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter(`Empresa eq '${Empresa}'`).select("*,GestionHumana/EMail").expand("GestionHumana").getAll();
         return respuesta;
     }
-    
+
     obtenerSolicitudesGH(){
         let respuesta = this.ObtenerConfiguracionServicio().web.lists.getByTitle(environment.ListaSolicitudPermisos).items.filter("Estado eq 'En revision GH'").select("*","Solicitante/Title").expand("Solicitante").getAll();
         return respuesta;

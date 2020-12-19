@@ -372,7 +372,7 @@ export class ValidarSolicitudComponent implements OnInit {
     sessionStorage.removeItem("TipoConsulta");
     setTimeout(
       ()=>{
-        window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+        window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet/';
         this.spinnerService.hide();
       },2000); 
     
@@ -417,7 +417,7 @@ export class ValidarSolicitudComponent implements OnInit {
               sessionStorage.removeItem("TipoConsulta");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet/';
                   this.spinnerService.hide();
                 },2000);          
             }
@@ -426,7 +426,7 @@ export class ValidarSolicitudComponent implements OnInit {
               this.mostrarError("Error al enviar la notificacion");
               setTimeout(
                 ()=>{
-                  window.location.href = 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo';
+                  window.location.href = 'https://aribasas.sharepoint.com/sites/Intranet/';
                   this.spinnerService.hide();
                 },2000);
               
