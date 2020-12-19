@@ -11,6 +11,7 @@ export class Usuario{
     IdJefeDirecto: number;
     NombreJefeDirecto: string;
     EmailJefe: string;
+    Empresa: string;
     
 
     constructor(
@@ -24,7 +25,9 @@ export class Usuario{
         email?: string, 
         IdJefeDirecto?: number, 
         NombreJefeDirecto?: string,
-        EmailJefe?: string)
+        EmailJefe?: string,
+        Empresa?: string
+        )
         {
             this.idUsuario = idUsuario;
             this.nombre = nombre;
@@ -36,7 +39,8 @@ export class Usuario{
             this.email = email;
             this.IdJefeDirecto= IdJefeDirecto;
             this.NombreJefeDirecto = NombreJefeDirecto;  
-            this.EmailJefe = EmailJefe;      
+            this.EmailJefe = EmailJefe; 
+            this.Empresa = Empresa     
         }
 
     public static fromJson(element: any) {
